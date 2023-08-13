@@ -1,3 +1,4 @@
+#include <iostream>
 #include <sstream>
 
 #include "Logger.h"
@@ -6,9 +7,9 @@
 class TestQ : public QueueManager<std::string, false>
 {
 public:
-	using base = QueueManager<std::string, false>;
+	using base_t = QueueManager<std::string, false>;
 
-	TestQ() : base(8) {}
+	TestQ() : base_t(8) {}
 	~TestQ()
 	{
 		// must close all thread before destroyed
@@ -86,6 +87,12 @@ bool test_queue_manager()
 
 void main()
 {
-	// Logger log;
-	test_queue_manager();
+	 //test_queue_manager();
+	Logger::set_level(LOG_LEVEL::Debug);
+
+	Logger::fatal << "3456" << 5 << "asdfga";
+	Logger::warn("sdfg %d sfh", 356);
+	Logger::debug("sdfg %d sfh", 356);
+
+	getchar();
 }

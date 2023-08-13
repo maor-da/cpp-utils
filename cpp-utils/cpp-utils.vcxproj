@@ -147,13 +147,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RAII.h" />
     <ClCompile Include="StateMachine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="guid.h" />
+    <ClInclude Include="Helpers.h" />
     <ClInclude Include="ImportFunction.h" />
+    <ClInclude Include="LogChannels.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="LoggerImp.h" />
+    <ClInclude Include="LogStream.h" />
     <ClInclude Include="QueueManager.h" />
     <ClInclude Include="Winutil.h" />
   </ItemGroup>

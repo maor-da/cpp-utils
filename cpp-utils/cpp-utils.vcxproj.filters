@@ -25,6 +25,12 @@
     <Filter Include="Header Files\common\logic">
       <UniqueIdentifier>{017ee487-6c60-496d-bae3-cd0e698b65c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\common\helpers">
+      <UniqueIdentifier>{69d22ec5-d0fa-443e-8657-775c524d49b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\common\tools\logger">
+      <UniqueIdentifier>{d8979714-ee37-424d-9368-7a29053c175e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -32,6 +38,12 @@
     </ClCompile>
     <ClCompile Include="StateMachine.h">
       <Filter>Header Files\common\logic</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RAII.h">
+      <Filter>Header Files\windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -48,7 +60,19 @@
       <Filter>Header Files\windows</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h">
-      <Filter>Header Files\common\tools</Filter>
+      <Filter>Header Files\common\tools\logger</Filter>
+    </ClInclude>
+    <ClInclude Include="LogStream.h">
+      <Filter>Header Files\common\tools\logger</Filter>
+    </ClInclude>
+    <ClInclude Include="LoggerImp.h">
+      <Filter>Header Files\common\tools\logger</Filter>
+    </ClInclude>
+    <ClInclude Include="LogChannels.h">
+      <Filter>Header Files\common\tools\logger</Filter>
+    </ClInclude>
+    <ClInclude Include="Helpers.h">
+      <Filter>Header Files\common\helpers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
