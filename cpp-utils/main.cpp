@@ -3,6 +3,7 @@
 
 #include "Logger.h"
 #include "QueueManager.h"
+#include "WindowsDebugLogChannel.h"
 
 class TestQ : public QueueManager<std::string, false>
 {
@@ -15,6 +16,8 @@ public:
 		// must close all thread before destroyed
 		shutdown_all();
 	}
+
+	virtual void thread_init() override {}
 
 	bool worker(std::string& obj) override
 	{
@@ -85,14 +88,25 @@ bool test_queue_manager()
 	return true;
 }
 
-void main()
+bool test_logger()
 {
-	 //test_queue_manager();
 	Logger::set_level(LOG_LEVEL::Debug);
+	Logger::set_channel<LOG_CHANNELS::DEBUG>(std::make_unique<WindowsDebugLogChannel>());
+	Logger::enable_channel<LOG_CHANNELS::DEBUG>();
 
 	Logger::fatal << "3456" << 5 << "asdfga";
 	Logger::warn("sdfg %d sfh", 356);
 	Logger::debug("sdfg %d sfh", 356);
+	Logger::trace("sdfg %5d sfh", 356);
+	return true;
+}
+
+int main()
+{
+	// test_queue_manager();
+
+	test_logger();
 
 	getchar();
+	return 0;
 }

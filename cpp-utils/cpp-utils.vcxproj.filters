@@ -74,5 +74,8 @@
     <ClInclude Include="Helpers.h">
       <Filter>Header Files\common\helpers</Filter>
     </ClInclude>
+    <ClInclude Include="WindowsDebugLogChannel.h">
+      <Filter>Header Files\windows</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

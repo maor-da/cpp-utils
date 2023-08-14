@@ -103,7 +103,7 @@ public:
 		va_list args;
 		va_start(args, format);
 		auto size = std::vsnprintf(nullptr, 0, format.data(), args);
-		if (size + 1 > 0) {
+		if (size + 1 > format.size()) {
 			std::string buf(size + 1, '\0');
 			size = std::vsnprintf(buf.data(), buf.size(), format.data(), args);
 			LogStreamStorage(LVL, std::string_view(buf));

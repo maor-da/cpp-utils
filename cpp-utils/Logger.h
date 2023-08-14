@@ -1,4 +1,6 @@
 #pragma once
+#include <memory>
+
 #include "LogStream.h"
 
 class Logger
@@ -19,8 +21,21 @@ public:
 		LogStreamStorage::set_level(level);
 	}
 
-	static inline void set_channels(Channels channels)
+	template <LOG_CHANNELS type>
+	constexpr static inline void enable_channel()
 	{
-		LoggerImp::instance().set_channels(channels);
+		LoggerImp::instance().enable_channel<type>();
+	}
+
+	template <LOG_CHANNELS type>
+	constexpr static inline void disable_channel()
+	{
+		LoggerImp::instance().disable_channel<type>();
+	}
+
+	template <LOG_CHANNELS type>
+	static inline void set_channel(std::unique_ptr<LogChannel<type>> channel)
+	{
+		LoggerImp::instance().set_channel<type>(std::move(channel));
 	}
 };

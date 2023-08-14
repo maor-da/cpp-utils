@@ -161,6 +161,7 @@
     <ClInclude Include="LoggerImp.h" />
     <ClInclude Include="LogStream.h" />
     <ClInclude Include="QueueManager.h" />
+    <ClInclude Include="WindowsDebugLogChannel.h" />
     <ClInclude Include="Winutil.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

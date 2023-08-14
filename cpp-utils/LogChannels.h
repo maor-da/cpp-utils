@@ -55,6 +55,8 @@ public:
 	LogChannel() : base_t(2) {}
 
 private:
+	virtual void thread_init() override {}
+
 	// Inherited via QueueManager
 	virtual bool worker(container_t& Obj) override
 	{
@@ -62,4 +64,19 @@ private:
 
 		return true;
 	}
+};
+
+template <>
+class LogChannel<LOG_CHANNELS::DEBUG> : public QueueManager<std::pair<LOG_LEVEL, std::string>, false>
+{
+public:
+	using base_t	  = QueueManager<std::pair<LOG_LEVEL, std::string>, false>;
+	using container_t = std::pair<LOG_LEVEL, std::string>;
+
+	LogChannel() : base_t(2) {}
+
+private:
+	virtual void thread_init() = 0;
+	// Inherited via QueueManager
+	virtual bool worker(container_t& Obj) = 0;
 };

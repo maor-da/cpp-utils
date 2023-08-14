@@ -16,28 +16,36 @@ LoggerImp& LoggerImp::instance()
 
 LoggerImp::LoggerImp() : m_Channels(Logger::Channels{.STDOUT = 1})
 {
-	activate_channels();
+	m_Ch_stdout = std::make_unique<LogChannel<LOG_CHANNELS::STDOUT>>();
+	if (m_Ch_stdout) {
+		m_Ch_stdout->start();
+	}
 }
 
-void LoggerImp::activate_channels()
+inline void LoggerImp::set_channels(__channels cnls)
 {
-	m_Ch_stdout.start();
+	m_Channels = cnls;
 }
 
 void LoggerImp::log(LOG_LEVEL level, std::string_view str)
 {
-	for (uint8_t c = 1; c != 0x80; c <<= 1) {
+	for (uint8_t c = 1; c > 0; c <<= 1) {
 		switch (static_cast<LOG_CHANNELS>(c & m_Channels.all)) {
-			case LOG_CHANNELS::STDOUT: {
-				m_Ch_stdout.push(
-					std::make_unique<stdout_channel_t::container_t>(level, str));
+			case LOG_CHANNELS::STDOUT:
+				if (m_Ch_stdout) {
+					m_Ch_stdout->push(
+						std::make_unique<std::decay_t<decltype(*m_Ch_stdout)>::container_t>(level, str));
+				}
 				break;
-			}
 			case LOG_CHANNELS::ETW:
 				break;
 			case LOG_CHANNELS::FILE:
 				break;
 			case LOG_CHANNELS::DEBUG:
+				if (m_Ch_debug) {
+					m_Ch_debug->push(
+						std::make_unique<std::decay_t<decltype(*m_Ch_debug)>::container_t>(level, str));
+				}
 				break;
 			default:
 				break;

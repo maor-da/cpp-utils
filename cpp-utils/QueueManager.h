@@ -35,6 +35,9 @@ public:
 
 	constexpr inline elem_t move_front()
 	{
+		if (base_t::empty()) {
+			return {};
+		}
 		elem_t t = std::move(this->front());
 		this->pop();
 		return t;
@@ -166,8 +169,10 @@ private:
 	{
 		std::unique_lock<std::mutex> queueLock(m_QueueMutex);
 		// queueLock.unlock();
-		m_ConditionVariable.wait(queueLock,
-								 [this]() { return ((m_Queue.size() > 0) && m_Working) || m_Shutdown; });
+		m_ConditionVariable.wait(queueLock, [this]() {
+			return ((m_Queue.size() > 0) && m_Working) ||							 // work
+				   (m_Shutdown && (std::this_thread::get_id() == m_ShutdownByTID));	 // shutdown
+		});
 
 		if (m_Shutdown && (std::this_thread::get_id() == m_ShutdownByTID)) {
 			throw ThreadExit();
@@ -178,11 +183,15 @@ private:
 
 	void dispatcher()
 	{
+		thread_init();
 		// std::unique_lock<std::mutex> queueLock(m_QueueMutex, std::defer_lock);
 		while (true) {
 			try {
 				// queueLock.lock();
 				elem_t&& obj = front();
+				if (!obj) {
+					continue;
+				}
 				// queueLock.unlock();
 
 				uint8_t counter = 0;
@@ -220,4 +229,5 @@ private:
 		return;
 	}
 	virtual bool worker(Container& Obj) = 0;
+	virtual void thread_init()			= 0;
 };
