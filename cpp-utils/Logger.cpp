@@ -1,6 +1,4 @@
-#include "Logger.h"
-
-#include "LoggerImp.h"
+#include <cpp-utils/Logger.h>
 
 std::unique_ptr<LoggerImp> LoggerImp::m_Instance = nullptr;
 

@@ -1,9 +1,9 @@
+#include <cpp-utils/Logger.h>
+#include <cpp-utils/QueueManager.h>
+#include <cpp-utils/WindowsDebugLogChannel.h>
+
 #include <iostream>
 #include <sstream>
-
-#include "Logger.h"
-#include "QueueManager.h"
-#include "WindowsDebugLogChannel.h"
 
 class TestQ : public QueueManager<std::string, false>
 {
