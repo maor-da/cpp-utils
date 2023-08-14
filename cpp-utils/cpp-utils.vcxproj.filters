@@ -36,45 +36,45 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StateMachine.h">
-      <Filter>Header Files\common\logic</Filter>
-    </ClCompile>
     <ClCompile Include="Logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RAII.h">
+    <ClCompile Include="..\include\cpp-utils\RAII.h">
       <Filter>Header Files\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\cpp-utils\StateMachine.h">
+      <Filter>Header Files\common\logic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="QueueManager.h">
-      <Filter>Header Files\common\logic</Filter>
-    </ClInclude>
-    <ClInclude Include="ImportFunction.h">
+    <ClInclude Include="..\include\cpp-utils\guid.h">
       <Filter>Header Files\windows</Filter>
     </ClInclude>
-    <ClInclude Include="Winutil.h">
-      <Filter>Header Files\windows</Filter>
-    </ClInclude>
-    <ClInclude Include="guid.h">
-      <Filter>Header Files\windows</Filter>
-    </ClInclude>
-    <ClInclude Include="Logger.h">
-      <Filter>Header Files\common\tools\logger</Filter>
-    </ClInclude>
-    <ClInclude Include="LogStream.h">
-      <Filter>Header Files\common\tools\logger</Filter>
-    </ClInclude>
-    <ClInclude Include="LoggerImp.h">
-      <Filter>Header Files\common\tools\logger</Filter>
-    </ClInclude>
-    <ClInclude Include="LogChannels.h">
-      <Filter>Header Files\common\tools\logger</Filter>
-    </ClInclude>
-    <ClInclude Include="Helpers.h">
+    <ClInclude Include="..\include\cpp-utils\Helpers.h">
       <Filter>Header Files\common\helpers</Filter>
     </ClInclude>
-    <ClInclude Include="WindowsDebugLogChannel.h">
+    <ClInclude Include="..\include\cpp-utils\ImportFunction.h">
+      <Filter>Header Files\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cpp-utils\LogChannels.h">
+      <Filter>Header Files\common\tools\logger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cpp-utils\Logger.h">
+      <Filter>Header Files\common\tools\logger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cpp-utils\LoggerImp.h">
+      <Filter>Header Files\common\tools\logger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cpp-utils\LogStream.h">
+      <Filter>Header Files\common\tools\logger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cpp-utils\QueueManager.h">
+      <Filter>Header Files\common\logic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cpp-utils\WindowsDebugLogChannel.h">
+      <Filter>Header Files\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cpp-utils\Winutil.h">
       <Filter>Header Files\windows</Filter>
     </ClInclude>
   </ItemGroup>
