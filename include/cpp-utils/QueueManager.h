@@ -26,12 +26,12 @@
  *                                          +-----------+
  *
  */
-template <class Container>
-class unique_queue : public std::queue<std::unique_ptr<Container>>
+template <class Container, template <class> class PT = std::unique_ptr>
+class pointer_queue : public std::queue<PT<Container>>
 {
 public:
-	using base_t = std::queue<std::unique_ptr<Container>>;
-	using elem_t = std::unique_ptr<Container>;
+	using base_t = std::queue<PT<Container>>;
+	using elem_t = PT<Container>;
 
 	constexpr inline elem_t move_front()
 	{
@@ -48,11 +48,11 @@ class ThreadExit : public std::exception
 {
 };
 
-template <class Container, bool SYNC = false>
+template <class Container, bool SYNC = false, template <class> class PT = std::unique_ptr>	// TODO: concept
 class QueueManager
 {
 public:
-	using elem_t = std::unique_ptr<Container>;
+	using elem_t = PT<Container>;
 
 	QueueManager(uint8_t poolSize, uint32_t maxQueue = 2048, uint8_t retries = 3, uint8_t interval = 1)
 		: m_PoolSize(poolSize), m_Retries(retries), m_Interval(interval), m_MaxQueue(maxQueue)
@@ -96,7 +96,7 @@ public:
 	void drop()
 	{
 		std::lock_guard<std::mutex> lock(m_QueueMutex);
-		unique_queue<Container> empty;
+		pointer_queue<Container, PT> empty;
 		m_Queue.swap(empty);  // will free the memory;
 	}
 
@@ -124,11 +124,16 @@ public:
 		m_Pool.emplace_back(new std::thread(&QueueManager<Container, SYNC>::dispatcher, this), m_Deleter);
 	}
 
+	uint8_t get_poolsize()
+	{
+		return m_PoolSize;
+	}
+
 private:
 	std::mutex m_QueueMutex;   // queue, scheduling, signals mutex
 	std::mutex m_WorkerMutex;  // workers mutex
 	std::condition_variable m_ConditionVariable;
-	unique_queue<Container> m_Queue;
+	pointer_queue<Container, PT> m_Queue;
 
 	std::vector<std::unique_ptr<std::thread, std::function<void(std::thread*)>>> m_Pool;
 	uint8_t m_PoolSize;
@@ -165,7 +170,7 @@ private:
 		m_ConditionVariable.notify_all();
 	}
 
-	std::unique_ptr<Container> front()
+	elem_t front()
 	{
 		std::unique_lock<std::mutex> queueLock(m_QueueMutex);
 		// queueLock.unlock();
@@ -183,51 +188,54 @@ private:
 
 	void dispatcher()
 	{
-		thread_init();
-		// std::unique_lock<std::mutex> queueLock(m_QueueMutex, std::defer_lock);
 		while (true) {
 			try {
-				// queueLock.lock();
 				elem_t&& obj = front();
 				if (!obj) {
 					continue;
 				}
-				// queueLock.unlock();
 
+				std::unique_lock<std::mutex> ulock(m_WorkerMutex, std::defer_lock);
 				uint8_t counter = 0;
-				while ((counter < m_Retries || m_Retries == -1)) {
+				do {
 					if (SYNC) {	 // synchronize between workers
-						std::lock_guard<std::mutex> g(m_WorkerMutex);
-						if (worker(*obj)) {
-							break;
-						}
-					} else {
-						if (worker(*obj)) {
-							break;
-						}
+						ulock.lock();
 					}
 
-					if (m_Shutdown && (m_ShutdownByTID == std::thread::id() ||
-									   std::this_thread::get_id() == m_ShutdownByTID)) {
+					if (worker(*obj)) {
+						break;
+					}
+
+					counter++;
+
+					if (m_Shutdown && (std::this_thread::get_id() == m_ShutdownByTID)) {
+						throw ThreadExit();
 					}
 
 					if (m_Retries == -1) {	// infinite numbers of retries
 						std::this_thread::sleep_for(std::chrono::seconds(m_Interval * (1 + counter % 10)));
-					} else {
+					} else if (counter < m_Retries) {
 						std::this_thread::sleep_for(std::chrono::seconds(m_Interval));
+					} else {
+						break;	// failed
 					}
-					counter++;
+				} while (true);
+
+				if (ulock) {
+					ulock.unlock();
 				}
+
 			} catch ([[maybe_unused]] const ThreadExit& e) {
 				// handle thread exit
 				return;
 			} catch ([[maybe_unused]] const std::exception& e) {
 				// printf("%s\n", e.what());
 			}
+
+			_Releases_lock_(m_WorkerMutex);
 		}
 
 		return;
 	}
 	virtual bool worker(Container& Obj) = 0;
-	virtual void thread_init()			= 0;
 };

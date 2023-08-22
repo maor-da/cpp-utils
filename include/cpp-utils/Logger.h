@@ -2,7 +2,12 @@
 #include <memory>
 
 #include "LogStream.h"
-
+/**
+* This is a static methods class to instantiate log stream
+* for every log level which use a storage and queue the message to the
+* logger implementation message queue.
+* It could control the logging channels and log level
+*/
 class Logger
 {
 public:

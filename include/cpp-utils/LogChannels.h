@@ -55,7 +55,6 @@ public:
 	LogChannel() : base_t(2) {}
 
 private:
-	virtual void thread_init() override {}
 
 	// Inherited via QueueManager
 	virtual bool worker(container_t& Obj) override
@@ -76,7 +75,6 @@ public:
 	LogChannel() : base_t(2) {}
 
 private:
-	virtual void thread_init() = 0;
 	// Inherited via QueueManager
 	virtual bool worker(container_t& Obj) = 0;
 };

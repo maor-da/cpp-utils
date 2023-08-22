@@ -6,7 +6,7 @@
 
 #include "LogChannels.h"
 
-// single instace
+// single instace implementation 
 class LoggerImp
 {
 public:

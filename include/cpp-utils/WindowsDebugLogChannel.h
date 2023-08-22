@@ -11,14 +11,11 @@ public:
 	using base_t = LogChannel<LOG_CHANNELS::DEBUG>;
 
 private:
-	virtual void thread_init() override
-	{
-		SetThreadDescription(GetCurrentThread(), L"WindowsDebugLogChannel");
-	}
-
 	// Inherited via QueueManager
 	virtual bool worker(container_t& Obj) override
 	{
+		SetThreadDescription(GetCurrentThread(), L"WindowsDebugLogChannel");
+
 		std::ostringstream oss;
 		oss << LevelName(Obj.first) << " :: " << Obj.second << std::endl;
 		OutputDebugStringA(oss.str().c_str());

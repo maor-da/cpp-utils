@@ -1,23 +1,34 @@
 #pragma once
 #include <stdarg.h>
 
+#include <codecvt>
+#include <locale>
 #include <sstream>
 #include <string>
+#include <type_traits>
 
 #include "LoggerImp.h"
+
+#ifdef _WIN32
+#include <winrt/base.h>
+#endif
 
 // Dummy type for immediate flushing
 struct __flush {
 };
 
-class LogStreamStorage : private std::ostringstream
+template <class OSS, class T>
+concept oss_support_t = requires(OSS oss, T t) { oss << t; };
+
+class LogStreamStorage : private std::ostringstream	 // TODO: consider using wide version
 {
+public:
 	using base_t = std::ostringstream;
 
-public:
 	LogStreamStorage(LOG_LEVEL level) : m_Level(level) {}
 
 	template <class T>
+	requires oss_support_t<base_t, T>
 	LogStreamStorage(LOG_LEVEL level, T val) : LogStreamStorage(level)
 	{
 		if (m_Level > m_MaxLevel) {
@@ -37,6 +48,7 @@ public:
 	}
 
 	template <class T>
+	requires oss_support_t<base_t, T>
 	LogStreamStorage& operator<<(T val)
 	{
 		if (m_Level > m_MaxLevel) {
@@ -47,7 +59,6 @@ public:
 		return *this;
 	}
 
-	template <>
 	LogStreamStorage& operator<<(__flush val)
 	{
 		if (m_Level > m_MaxLevel) {
@@ -89,9 +100,15 @@ class LogStream
 {
 public:
 	template <class T>
+	requires oss_support_t<LogStreamStorage::base_t, T>
 	LogStreamStorage operator<<(T val)	// factory
 	{
 		return LogStreamStorage(LVL, val);
+	}
+
+	LogStreamStorage operator<<(std::wstring_view val)
+	{
+		return LogStreamStorage(LVL, std::move(to_utf8(val)));
 	}
 
 	void operator()(std::string_view format, ...)
@@ -107,41 +124,41 @@ public:
 			std::string buf(size, '\0');
 			size = std::vsnprintf(buf.data(), buf.size(), format.data(), args);
 			// msvc calc the vsnprintf size with null terminator
-			buf = buf.c_str(); // reset the size
-			LogStreamStorage(LVL, std::string_view(buf));
+			buf = buf.c_str();	// reset the size
+			LogStreamStorage(LVL, std::move(buf));
 		}
 		va_end(args);
 
-		// if constexpr (validate_format<std::tuple<Args...>>(format)) {
-		//	return;
-		// }
+		// TODO: Create constexpr check for printf specifiers
+	}
 
-		// LogStreamStorage lss(LVL);
+	void operator()(std::wstring_view format, ...)
+	{
+		if (format.empty() || LVL > LogStreamStorage::get_level()) {
+			return;
+		}
 
-		// lss << format.substr(last);
+		va_list args;
+		va_start(args, format);
+		auto size = std::vswprintf(nullptr, 0, format.data(), args);
+		if (size > format.size()) {
+			std::wstring buf(size, '\0');
+			size = std::vswprintf(buf.data(), buf.size(), format.data(), args);
+			// msvc calc the vsnprintf size with null terminator
+			buf = buf.c_str();	// reset the size
+			LogStreamStorage(LVL, std::move(to_utf8(buf)));
+		}
+		va_end(args);
 
-		// print log
+		// TODO: Create constexpr check for printf specifiers
 	}
 
 private:
-	// template <class Args>
-	// consteval static bool validate_format(const std::string_view format)
-	//{
-	//	size_t last = 0;
-	//	size_t idx = 0;
-	//	for (size_t pos = format.find('%', 0); pos != std::string_view::npos;
-	//		 pos = format.find('%', last), idx++) {
-	//		switch (format[pos++]) {
-	//			case 'd': {
-	//				auto b = std::same_as<std::tuple_element_t<idx, Args>, int>;
-	//				break;
-	//			}
-	//			default:
-	//				break;
-	//		}
-
-	//		last = pos;
-	//	}
-	//	return true;
-	//}
+	std::string to_utf8(std::wstring_view ws)
+	{
+#ifdef _WIN32
+		// if windows
+		return winrt::to_string(ws);
+#endif
+	}
 };
