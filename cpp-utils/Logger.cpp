@@ -14,10 +14,8 @@ LoggerImp& LoggerImp::instance()
 
 LoggerImp::LoggerImp() : m_Channels(Logger::Channels{.STDOUT = 1})
 {
-	m_Ch_stdout = std::make_unique<LogChannel<LOG_CHANNELS::STDOUT>>();
-	if (m_Ch_stdout) {
-		m_Ch_stdout->start();
-	}
+	set_channel<LOG_CHANNELS::STDOUT>(std::make_unique<LogChannel<LOG_CHANNELS::STDOUT>>());
+	enable_channel<LOG_CHANNELS::STDOUT>();
 }
 
 inline void LoggerImp::set_channels(__channels cnls)
@@ -27,12 +25,12 @@ inline void LoggerImp::set_channels(__channels cnls)
 
 void LoggerImp::log(LOG_LEVEL level, std::string_view str)
 {
+	auto msg = std::make_shared<std::decay_t<decltype(*m_Ch_stdout)>::container_t>(level, str);
 	for (uint8_t c = 1; c > 0; c <<= 1) {
 		switch (static_cast<LOG_CHANNELS>(c & m_Channels.all)) {
 			case LOG_CHANNELS::STDOUT:
 				if (m_Ch_stdout) {
-					m_Ch_stdout->push(
-						std::make_unique<std::decay_t<decltype(*m_Ch_stdout)>::container_t>(level, str));
+					m_Ch_stdout->push(msg);
 				}
 				break;
 			case LOG_CHANNELS::ETW:
@@ -41,8 +39,7 @@ void LoggerImp::log(LOG_LEVEL level, std::string_view str)
 				break;
 			case LOG_CHANNELS::DEBUG:
 				if (m_Ch_debug) {
-					m_Ch_debug->push(
-						std::make_unique<std::decay_t<decltype(*m_Ch_debug)>::container_t>(level, str));
+					m_Ch_debug->push(msg);
 				}
 				break;
 			default:
@@ -57,8 +54,14 @@ LogStream<LOG_LEVEL::Fatal> Logger::fatal;
 LogStream<LOG_LEVEL::Error> Logger::error;
 LogStream<LOG_LEVEL::Warning> Logger::warn;
 LogStream<LOG_LEVEL::Info> Logger::info;
+
+#ifdef __NO_TRACE_LOGS__
+VoidLogStream Logger::debug;
+VoidLogStream Logger::trace;
+#else
 LogStream<LOG_LEVEL::Debug> Logger::debug;
 LogStream<LOG_LEVEL::Trace> Logger::trace;
+#endif	// __NO_TRACE_LOGS__
 
 LOG_LEVEL LogStreamStorage::m_MaxLevel = LOG_LEVEL::Warning;
 

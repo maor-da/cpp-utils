@@ -63,8 +63,8 @@ public:
 	}
 
 	// Push to the queue and notify the thread
-	bool push(elem_t&& Obj)
-	{  // move semantic
+	bool push(elem_t Obj)
+	{  // implicit move semantics with unique_ptr
 		{
 			std::lock_guard<std::mutex> lock(m_QueueMutex);
 			if (m_Queue.size() >= m_MaxQueue) {
@@ -121,7 +121,7 @@ public:
 	void add_thread()
 	{
 		std::lock_guard<std::mutex> poolLock(m_PoolMutex);
-		m_Pool.emplace_back(new std::thread(&QueueManager<Container, SYNC>::dispatcher, this), m_Deleter);
+		m_Pool.emplace_back(new std::thread(&QueueManager<Container, SYNC, PT>::dispatcher, this), m_Deleter);
 	}
 
 	uint8_t get_poolsize()
@@ -198,7 +198,7 @@ private:
 				std::unique_lock<std::mutex> ulock(m_WorkerMutex, std::defer_lock);
 				uint8_t counter = 0;
 				do {
-					if (SYNC) {	 // synchronize between workers
+					if (SYNC && !ulock) {  // synchronize between workers
 						ulock.lock();
 					}
 

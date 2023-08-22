@@ -46,16 +46,16 @@ public:
 };
 
 template <>
-class LogChannel<LOG_CHANNELS::STDOUT> : public QueueManager<std::pair<LOG_LEVEL, std::string>, true>
+class LogChannel<LOG_CHANNELS::STDOUT>
+	: public QueueManager<std::pair<LOG_LEVEL, std::string>, true, std::shared_ptr>
 {
 public:
-	using base_t	  = QueueManager<std::pair<LOG_LEVEL, std::string>, true>;
+	using base_t	  = QueueManager<std::pair<LOG_LEVEL, std::string>, true, std::shared_ptr>;
 	using container_t = std::pair<LOG_LEVEL, std::string>;
 
 	LogChannel() : base_t(2) {}
 
 private:
-
 	// Inherited via QueueManager
 	virtual bool worker(container_t& Obj) override
 	{
@@ -66,10 +66,11 @@ private:
 };
 
 template <>
-class LogChannel<LOG_CHANNELS::DEBUG> : public QueueManager<std::pair<LOG_LEVEL, std::string>, false>
+class LogChannel<LOG_CHANNELS::DEBUG>
+	: public QueueManager<std::pair<LOG_LEVEL, std::string>, true, std::shared_ptr>
 {
 public:
-	using base_t	  = QueueManager<std::pair<LOG_LEVEL, std::string>, false>;
+	using base_t	  = QueueManager<std::pair<LOG_LEVEL, std::string>, true, std::shared_ptr>;
 	using container_t = std::pair<LOG_LEVEL, std::string>;
 
 	LogChannel() : base_t(2) {}

@@ -95,6 +95,17 @@ private:
 	LoggerImp& m_Log = LoggerImp::instance();
 };
 
+class VoidLogStream
+{
+public:
+	template <class T>
+	VoidLogStream& operator<<(T val)
+	{
+		return *this;
+	}
+	void operator()(...) {}
+};
+
 template <LOG_LEVEL LVL>
 class LogStream
 {
@@ -103,12 +114,18 @@ public:
 	requires oss_support_t<LogStreamStorage::base_t, T>
 	LogStreamStorage operator<<(T val)	// factory
 	{
+		// if (LVL > LogStreamStorage::get_level()) {
+		//	return;
+		// }
 		return LogStreamStorage(LVL, val);
 	}
 
 	LogStreamStorage operator<<(std::wstring_view val)
 	{
-		return LogStreamStorage(LVL, std::move(to_utf8(val)));
+		// if (val.empty() || LVL > LogStreamStorage::get_level()) {
+		//	return;
+		// }
+		return *this << to_utf8(val);
 	}
 
 	void operator()(std::string_view format, ...)
