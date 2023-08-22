@@ -1,4 +1,5 @@
 #include <cpp-utils/Logger.h>
+#include <cpp-utils/NamedpipeServer.h>
 #include <cpp-utils/QueueManager.h>
 #include <cpp-utils/WindowsDebugLogChannel.h>
 
@@ -16,8 +17,6 @@ public:
 		// must close all thread before destroyed
 		shutdown_all();
 	}
-
-	virtual void thread_init() override {}
 
 	bool worker(std::string& obj) override
 	{
@@ -101,11 +100,42 @@ bool test_logger()
 	return true;
 }
 
+bool test_namedpipe()
+{
+	Logger::set_level(LOG_LEVEL::Debug);
+
+	NamedpipeServer::Configuration config;
+	config.lpName = L"//./pipe/mynamedpipe";
+	WaitNamedPipeW(config.lpName, NMPWAIT_WAIT_FOREVER); // not exist - not blocking
+	NamedpipeServer nps(1, config, [](std::wstring_view ws) {
+		Logger::info << ws;
+		return L"true";
+	});
+
+	auto a1	   = CreateFileW(config.lpName, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+
+	DWORD mode = PIPE_READMODE_MESSAGE;
+	if (!SetNamedPipeHandleState(a1, &mode, NULL, NULL)) {
+	}
+
+
+
+	auto a2 = CreateFileW(config.lpName, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+
+	WaitNamedPipeW(config.lpName, NMPWAIT_WAIT_FOREVER);
+	auto a3 = CreateFileW(config.lpName, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+
+	return true;
+}
+
 int main()
 {
-	// test_queue_manager();
+	std::ostringstream ss;
 
-	test_logger();
+	static_assert(oss_support_t<std::ostringstream, std::string>, "oss_support_t failed");
+	// test_queue_manager();
+	// test_logger();
+	test_namedpipe();
 
 	getchar();
 	return 0;

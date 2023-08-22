@@ -27,26 +27,26 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -151,19 +151,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\include\cpp-utils\NamedpipeServer.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="..\include\cpp-utils\RAII.h" />
+    <ClCompile Include="..\include\cpp-utils\WinRAII.h" />
     <ClCompile Include="..\include\cpp-utils\StateMachine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\cpp-utils\guid.h" />
-    <ClInclude Include="..\include\cpp-utils\Helpers.h" />
+    <ClInclude Include="..\include\cpp-utils\TypeHelpers.h" />
     <ClInclude Include="..\include\cpp-utils\ImportFunction.h" />
     <ClInclude Include="..\include\cpp-utils\LogChannels.h" />
     <ClInclude Include="..\include\cpp-utils\Logger.h" />
     <ClInclude Include="..\include\cpp-utils\LoggerImp.h" />
     <ClInclude Include="..\include\cpp-utils\LogStream.h" />
+    <ClInclude Include="..\include\cpp-utils\NamedpipeClient.h" />
+    <ClInclude Include="..\include\cpp-utils\NamedpipeServer.h" />
     <ClInclude Include="..\include\cpp-utils\QueueManager.h" />
     <ClInclude Include="..\include\cpp-utils\WindowsDebugLogChannel.h" />
     <ClInclude Include="..\include\cpp-utils\Winutil.h" />

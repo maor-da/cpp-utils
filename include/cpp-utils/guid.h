@@ -11,47 +11,6 @@ namespace guid
 template <class T>
 concept GUID_CLASS = std::same_as<T, GUID> || std::same_as<T, IID> || std::same_as<T, CLSID>;
 
-template <class T>
-inline T generate_guid()
-{
-	static_assert("Not implemented");
-}
-
-template <>
-inline GUID generate_guid()
-{
-	GUID g;
-
-	if (CoCreateGuid(&g) != S_OK) {
-		return {};
-	}
-
-	return g;
-}
-
-template <>
-inline std::wstring generate_guid()
-{
-	return guid_to_wstring(generate_guid<GUID>());
-}
-
-inline std::wstring generate_uuid()
-{
-	return guid_to_uuid_wstring(generate_guid<std::wstring>());
-}
-
-template <GUID_CLASS T>
-inline std::wstring guid_to_wstring(const T& guid)
-{
-	auto str = std::make_unique<wchar_t[]>(40);
-
-	if (!StringFromGUID2(guid, str.get(), 40)) {
-		return {};
-	}
-
-	return str.get();
-}
-
 inline std::wstring uuid_to_guid_wstring(std::wstring_view guid)
 {
 	if (guid.size() == 36) {
@@ -114,6 +73,47 @@ inline constexpr std::wstring binary_to_wstring(const uint8_t* guid)
 	return str;
 }
 
+template <class T>
+inline T generate_guid()
+{
+	static_assert("Not implemented");
+}
+
+template <>
+inline GUID generate_guid()
+{
+	GUID g;
+
+	if (CoCreateGuid(&g) != S_OK) {
+		return {};
+	}
+
+	return g;
+}
+
+template <GUID_CLASS T>
+inline std::wstring guid_to_wstring(const T& guid)
+{
+	auto str = std::make_unique<wchar_t[]>(40);
+
+	if (!StringFromGUID2(guid, str.get(), 40)) {
+		return {};
+	}
+
+	return str.get();
+}
+
+template <>
+inline std::wstring generate_guid()
+{
+	return guid_to_wstring(generate_guid<GUID>());
+}
+
+inline std::wstring generate_uuid()
+{
+	return guid_to_uuid_wstring(generate_guid<std::wstring>());
+}
+
 }  // namespace guid
 
-}  // namespace Winutil
+}  // namespace __NAMESPACE__
