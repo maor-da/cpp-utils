@@ -21,7 +21,7 @@ public:
 		LPCWSTR lpName;	 // \\.\pipe\pipename
 		DWORD dwOpenMode = PIPE_ACCESS_DUPLEX;
 		DWORD dwPipeMode = PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT | PIPE_REJECT_REMOTE_CLIENTS;
-		DWORD nMaxInstances						   = 8;
+		DWORD nMaxInstances						   = 16;
 		DWORD nOutBufferSize					   = 4096;
 		DWORD nInBufferSize						   = 4096;
 		DWORD nDefaultTimeOut					   = NMPWAIT_USE_DEFAULT_WAIT;

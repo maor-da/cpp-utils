@@ -5,10 +5,8 @@ NamedpipeServer::~NamedpipeServer()
 	m_Running = false;
 	for (auto& pipe : m_Servers) {
 		if (pipe) {
-			if (CreateFileW(m_config.lpName, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL) !=
-				INVALID_HANDLE_VALUE) {
-			}
-			CloseHandle(pipe);
+			// try wake up the pipe
+			CreateFileW(m_config.lpName, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
 		}
 	}
 }
@@ -53,10 +51,56 @@ inline bool NamedpipeServer::worker(HANDLE& pipe)
 
 	Logger::info << "Start namedpipe server on thread: " << std::this_thread::get_id();
 
-	while ((ConnectNamedPipe(pipe, NULL) || (GetLastError() == ERROR_PIPE_CONNECTED)) && m_Running) {
-		Sleep(50);
-		m_Callback(L"message");
+	DWORD written, readed;
+	std::wstring message;
+	BOOL ret;
+	auto readBuf = std::make_unique<wchar_t[]>(1024);
+
+	while ((ConnectNamedPipe(pipe, NULL) || (GetLastError() == ERROR_PIPE_CONNECTED))) {
+		if (!m_Running) {
+			// Close pipe
+			break;
+		}
+
+		message.clear();
+
+		do {
+			readed = 0;
+			ret	   = ReadFile(pipe, readBuf.get(), 1024 * sizeof(wchar_t), &readed, nullptr);
+
+			if (!ret) {
+				if (GetLastError() != ERROR_MORE_DATA) {
+					// Failed read
+					break;
+				}
+			}
+
+			if (readed) {
+				message += std::wstring_view(readBuf.get(), readed / sizeof(wchar_t));
+			}
+		} while (!ret);
+
+		if (!ret) {
+			if (GetLastError() == ERROR_BROKEN_PIPE) {
+				// server disconnected
+				continue;
+			}
+		}
+
+		message = m_Callback(message);
+
+		if (message.empty()) {
+			FlushFileBuffers(pipe);
+			DisconnectNamedPipe(pipe);
+			continue;
+		}
+
+		WriteFile(pipe, message.c_str(), message.length() * sizeof(wchar_t), &written, nullptr);
 	}
+
+	FlushFileBuffers(pipe);
+	DisconnectNamedPipe(pipe);
+	CloseHandle(pipe);
 
 	return true;
 }

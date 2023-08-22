@@ -1,8 +1,10 @@
 #include <cpp-utils/Logger.h>
+#include <cpp-utils/NamedpipeClient.h>
 #include <cpp-utils/NamedpipeServer.h>
 #include <cpp-utils/QueueManager.h>
 #include <cpp-utils/WindowsDebugLogChannel.h>
 
+#include <cwchar>
 #include <iostream>
 #include <sstream>
 
@@ -95,8 +97,8 @@ bool test_logger()
 
 	Logger::fatal << "3456" << 5 << "asdfga";
 	Logger::warn("sdfg %d sfh", 356);
-	Logger::debug("sdfg %d sfh", 356);
-	Logger::trace("sdfg %5d sfh", 356);
+	Logger::debug("DEBUGGGGG %d sfh", 356);
+	Logger::trace("TRACEEEEE %5d sfh", 356);
 	return true;
 }
 
@@ -106,22 +108,33 @@ bool test_namedpipe()
 
 	NamedpipeServer::Configuration config;
 	config.lpName = L"//./pipe/mynamedpipe";
-	WaitNamedPipeW(config.lpName, NMPWAIT_WAIT_FOREVER); // not exist - not blocking
-	NamedpipeServer nps(1, config, [](std::wstring_view ws) {
+	WaitNamedPipeW(config.lpName, NMPWAIT_WAIT_FOREVER);  // not exist - not blocking
+	NamedpipeServer nps(16, config, [](std::wstring_view ws) {
 		Logger::info << ws;
-		return L"true";
+		auto val = wcstol(ws.data(), nullptr, 10);
+
+		if (val) {
+			return std::to_wstring(++val);
+		}
+
+		return std::wstring{};
 	});
 
-	auto a1	   = CreateFileW(config.lpName, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+	NamedpipeClient client(config.lpName);
 
-	DWORD mode = PIPE_READMODE_MESSAGE;
-	if (!SetNamedPipeHandleState(a1, &mode, NULL, NULL)) {
-	}
+	client << L"I am the client";
+	client << L"and this is counter ping pong";
 
+	client(L"1", [](std::wstring_view ws) {
+		auto val = wcstol(ws.data(), nullptr, 10);
+		if (val > 10) {
+			return std::wstring{};
+		}
 
+		return std::to_wstring(++val);
+	});
 
-	auto a2 = CreateFileW(config.lpName, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
-
+	Sleep(100);
 	WaitNamedPipeW(config.lpName, NMPWAIT_WAIT_FOREVER);
 	auto a3 = CreateFileW(config.lpName, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
 
