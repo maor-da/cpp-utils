@@ -49,7 +49,7 @@ inline bool NamedpipeServer::worker(HANDLE& pipe)
 {
 	SetThreadDescription(GetCurrentThread(), L"NamedpipeServer");
 
-	Logger::info << "Start namedpipe server on thread: " << std::this_thread::get_id();
+	Logger::debug << "Start namedpipe server on thread: " << std::this_thread::get_id();
 
 	DWORD written, readed;
 	std::wstring message;
@@ -83,6 +83,8 @@ inline bool NamedpipeServer::worker(HANDLE& pipe)
 		if (!ret) {
 			if (GetLastError() == ERROR_BROKEN_PIPE) {
 				// server disconnected
+				FlushFileBuffers(pipe);
+				DisconnectNamedPipe(pipe);
 				continue;
 			}
 		}
@@ -101,6 +103,8 @@ inline bool NamedpipeServer::worker(HANDLE& pipe)
 	FlushFileBuffers(pipe);
 	DisconnectNamedPipe(pipe);
 	CloseHandle(pipe);
+
+	Logger::debug << "Namedpipe server closed on thread: " << std::this_thread::get_id();
 
 	return true;
 }

@@ -3,6 +3,7 @@
 #include <cpp-utils/NamedpipeServer.h>
 #include <cpp-utils/QueueManager.h>
 #include <cpp-utils/WindowsDebugLogChannel.h>
+#include <cpp-utils/Winutil.h>
 
 #include <cwchar>
 #include <iostream>
@@ -107,7 +108,8 @@ bool test_namedpipe()
 	Logger::set_level(LOG_LEVEL::Debug);
 
 	NamedpipeServer::Configuration config;
-	config.lpName = L"//./pipe/mynamedpipe";
+	auto pipeName = L"//./pipe/" + winutil::guid::generate_uuid();
+	config.lpName = pipeName.c_str();
 	WaitNamedPipeW(config.lpName, NMPWAIT_WAIT_FOREVER);  // not exist - not blocking
 	NamedpipeServer nps(16, config, [](std::wstring_view ws) {
 		Logger::info << ws;
@@ -134,9 +136,7 @@ bool test_namedpipe()
 		return std::to_wstring(++val);
 	});
 
-	Sleep(100);
-	WaitNamedPipeW(config.lpName, NMPWAIT_WAIT_FOREVER);
-	auto a3 = CreateFileW(config.lpName, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+	getchar();
 
 	return true;
 }

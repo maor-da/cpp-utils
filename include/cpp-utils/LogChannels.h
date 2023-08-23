@@ -1,4 +1,5 @@
 #pragma once
+#include <Windows.h>
 #include <stdint.h>
 
 #include <iostream>
@@ -59,8 +60,9 @@ private:
 	// Inherited via QueueManager
 	virtual bool worker(container_t& Obj) override
 	{
-		std::cout << LevelName(Obj.first) << ":: " << Obj.second.c_str() << std::endl;
-
+		static int c = 0;
+		std::cout << LevelName(Obj.first) << " (" << c++ << ") "
+				  << ":: " << Obj.second.c_str() << std::endl;
 		return true;
 	}
 };

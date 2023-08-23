@@ -7,7 +7,6 @@
 
 #include "Logger.h"
 #include "QueueManager.h"
-#include "guid.h"
 
 
 

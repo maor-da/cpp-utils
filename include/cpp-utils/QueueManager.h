@@ -170,7 +170,7 @@ private:
 		m_ConditionVariable.notify_all();
 	}
 
-	elem_t front()
+	elem_t get_task()
 	{
 		std::unique_lock<std::mutex> queueLock(m_QueueMutex);
 		// queueLock.unlock();
@@ -190,18 +190,19 @@ private:
 	{
 		while (true) {
 			try {
-				elem_t&& obj = front();
+				std::unique_lock<std::mutex> syncLock(m_WorkerMutex, std::defer_lock);
+				if (SYNC) {	 // synchronize between workers
+					syncLock.lock();
+				}
+
+				elem_t&& obj = get_task();
+
 				if (!obj) {
 					continue;
 				}
 
-				std::unique_lock<std::mutex> ulock(m_WorkerMutex, std::defer_lock);
 				uint8_t counter = 0;
 				do {
-					if (SYNC && !ulock) {  // synchronize between workers
-						ulock.lock();
-					}
-
 					if (worker(*obj)) {
 						break;
 					}
@@ -221,9 +222,9 @@ private:
 					}
 				} while (true);
 
-				if (ulock) {
-					ulock.unlock();
-				}
+				//if (ulock) {
+				//	ulock.unlock();
+				//}
 
 			} catch ([[maybe_unused]] const ThreadExit& e) {
 				// handle thread exit

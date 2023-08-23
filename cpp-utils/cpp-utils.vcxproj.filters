@@ -54,6 +54,9 @@
     <ClCompile Include="..\include\cpp-utils\NamedpipeServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\include\cpp-utils\NamedpipeClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\cpp-utils\guid.h">
