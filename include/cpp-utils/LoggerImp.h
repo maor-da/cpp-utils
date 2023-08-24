@@ -50,8 +50,7 @@ public:
 	{
 		if constexpr (type == LOG_CHANNELS::ALL || type == LOG_CHANNELS::STDOUT) {
 			if (m_Ch_stdout) {
-				m_Ch_stdout->shutdown_all();
-				m_Ch_stdout->drop();
+				m_Ch_stdout->stop();
 				m_Channels.STDOUT = 0;
 			}
 		}
@@ -61,8 +60,7 @@ public:
 		}
 		if constexpr (type == LOG_CHANNELS::ALL || type == LOG_CHANNELS::DEBUG) {
 			if (m_Ch_debug) {
-				m_Ch_debug->shutdown_all();
-				m_Ch_debug->drop();
+				m_Ch_debug->stop();
 				m_Channels.DEBUG = 0;
 			}
 		}

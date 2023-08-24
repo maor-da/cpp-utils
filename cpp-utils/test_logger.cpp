@@ -7,6 +7,7 @@ bool test_logger()
 {
 	Logger::set_level(LOG_LEVEL::Debug);
 	Logger::set_channel<LOG_CHANNELS::DEBUG>(std::make_unique<WindowsDebugLogChannel>());
+	Logger::disable_channel<LOG_CHANNELS::ALL>();
 	Logger::enable_channel<LOG_CHANNELS::DEBUG>();
 
 	Logger::fatal << "3456" << 5 << "asdfga";

@@ -102,6 +102,7 @@ public:
 
 	void shutdown_all()
 	{
+		std::lock_guard<std::mutex> poolLock(m_PoolMutex);
 		if (m_Pool.empty()) {
 			return;
 		}
@@ -111,6 +112,7 @@ public:
 
 	void shutdown_one()
 	{
+		std::lock_guard<std::mutex> poolLock(m_PoolMutex);
 		if (m_Pool.empty()) {
 			return;
 		}
