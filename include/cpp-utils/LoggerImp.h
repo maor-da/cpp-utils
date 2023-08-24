@@ -6,7 +6,7 @@
 
 #include "LogChannels.h"
 
-// single instace implementation 
+// single instace implementation
 class LoggerImp
 {
 public:
@@ -27,14 +27,17 @@ public:
 	template <LOG_CHANNELS type>
 	constexpr void enable_channel()
 	{
-		if constexpr (type == LOG_CHANNELS::STDOUT) {
+		if constexpr (type == LOG_CHANNELS::ALL || type == LOG_CHANNELS::STDOUT) {
 			if (m_Ch_stdout) {
 				m_Ch_stdout->start();
 				m_Channels.STDOUT = 1;
 			}
-		} else if constexpr (type == LOG_CHANNELS::ETW) {
-		} else if constexpr (type == LOG_CHANNELS::FILE) {
-		} else if constexpr (type == LOG_CHANNELS::DEBUG) {
+		}
+		if constexpr (type == LOG_CHANNELS::ALL || type == LOG_CHANNELS::ETW) {
+		}
+		if constexpr (type == LOG_CHANNELS::ALL || type == LOG_CHANNELS::FILE) {
+		}
+		if constexpr (type == LOG_CHANNELS::ALL || type == LOG_CHANNELS::DEBUG) {
 			if (m_Ch_debug) {
 				m_Ch_debug->start();
 				m_Channels.DEBUG = 1;
@@ -45,15 +48,18 @@ public:
 	template <LOG_CHANNELS type>
 	constexpr void disable_channel()
 	{
-		if constexpr (type == LOG_CHANNELS::STDOUT) {
+		if constexpr (type == LOG_CHANNELS::ALL || type == LOG_CHANNELS::STDOUT) {
 			if (m_Ch_stdout) {
 				m_Ch_stdout->shutdown_all();
 				m_Ch_stdout->drop();
 				m_Channels.STDOUT = 0;
 			}
-		} else if constexpr (type == LOG_CHANNELS::ETW) {
-		} else if constexpr (type == LOG_CHANNELS::FILE) {
-		} else if constexpr (type == LOG_CHANNELS::DEBUG) {
+		}
+		if constexpr (type == LOG_CHANNELS::ALL || type == LOG_CHANNELS::ETW) {
+		}
+		if constexpr (type == LOG_CHANNELS::ALL || type == LOG_CHANNELS::FILE) {
+		}
+		if constexpr (type == LOG_CHANNELS::ALL || type == LOG_CHANNELS::DEBUG) {
 			if (m_Ch_debug) {
 				m_Ch_debug->shutdown_all();
 				m_Ch_debug->drop();
