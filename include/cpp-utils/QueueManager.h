@@ -222,10 +222,6 @@ private:
 					}
 				} while (true);
 
-				//if (ulock) {
-				//	ulock.unlock();
-				//}
-
 			} catch ([[maybe_unused]] const ThreadExit& e) {
 				// handle thread exit
 				return;

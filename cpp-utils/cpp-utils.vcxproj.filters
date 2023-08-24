@@ -37,6 +37,9 @@
     <Filter Include="Header Files\windows\ipc\namedpipe">
       <UniqueIdentifier>{d7f6c276-9c65-416b-b673-663890b59cdf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\tests">
+      <UniqueIdentifier>{0b805397-c6bc-466a-a7df-0fccd1f86f87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -56,6 +59,15 @@
     </ClCompile>
     <ClCompile Include="..\include\cpp-utils\NamedpipeClient.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_queue.cpp">
+      <Filter>Source Files\tests</Filter>
+    </ClCompile>
+    <ClCompile Include="test_logger.cpp">
+      <Filter>Source Files\tests</Filter>
+    </ClCompile>
+    <ClCompile Include="test_namedpipe.cpp">
+      <Filter>Source Files\tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +106,9 @@
     </ClInclude>
     <ClInclude Include="..\include\cpp-utils\NamedpipeServer.h">
       <Filter>Header Files\windows\ipc\namedpipe</Filter>
+    </ClInclude>
+    <ClInclude Include="tests.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

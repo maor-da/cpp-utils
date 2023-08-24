@@ -54,7 +54,7 @@ public:
 	using base_t	  = QueueManager<std::pair<LOG_LEVEL, std::string>, true, std::shared_ptr>;
 	using container_t = std::pair<LOG_LEVEL, std::string>;
 
-	LogChannel() : base_t(2) {}
+	LogChannel() : base_t(1) {}
 
 private:
 	// Inherited via QueueManager
@@ -75,7 +75,7 @@ public:
 	using base_t	  = QueueManager<std::pair<LOG_LEVEL, std::string>, true, std::shared_ptr>;
 	using container_t = std::pair<LOG_LEVEL, std::string>;
 
-	LogChannel() : base_t(2) {}
+	LogChannel() : base_t(1) {}
 
 private:
 	// Inherited via QueueManager
