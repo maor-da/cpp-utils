@@ -1,4 +1,4 @@
-#include "NamedpipeServer.h"
+#include <cpp-utils/NamedpipeServer.h>
 
 NamedpipeServer::~NamedpipeServer()
 {

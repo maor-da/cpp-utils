@@ -54,10 +54,10 @@
     <ClCompile Include="..\include\cpp-utils\StateMachine.h">
       <Filter>Header Files\common\logic</Filter>
     </ClCompile>
-    <ClCompile Include="..\include\cpp-utils\NamedpipeServer.cpp">
+    <ClCompile Include="NamedpipeServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\include\cpp-utils\NamedpipeClient.cpp">
+    <ClCompile Include="NamedpipeClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="test_queue.cpp">
@@ -68,6 +68,12 @@
     </ClCompile>
     <ClCompile Include="test_namedpipe.cpp">
       <Filter>Source Files\tests</Filter>
+    </ClCompile>
+    <ClCompile Include="StringFormat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Token.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -109,6 +115,12 @@
     </ClInclude>
     <ClInclude Include="tests.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cpp-utils\StringFormat.h">
+      <Filter>Header Files\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cpp-utils\Token.h">
+      <Filter>Header Files\windows</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

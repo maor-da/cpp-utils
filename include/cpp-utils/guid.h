@@ -1,6 +1,7 @@
 #pragma once
 #include <windows.h>
 
+#include <memory>
 #include <string>
 
 namespace __NAMESPACE__
@@ -73,6 +74,18 @@ inline constexpr std::wstring binary_to_wstring(const uint8_t* guid)
 	return str;
 }
 
+template <GUID_CLASS T>
+inline std::wstring guid_to_wstring(const T& guid)
+{
+	auto str = std::make_unique<wchar_t[]>(40);
+
+	if (!StringFromGUID2(guid, str.get(), 40)) {
+		return {};
+	}
+
+	return str.get();
+}
+
 template <class T>
 inline T generate_guid()
 {
@@ -91,27 +104,28 @@ inline GUID generate_guid()
 	return g;
 }
 
-template <GUID_CLASS T>
-inline std::wstring guid_to_wstring(const T& guid)
-{
-	auto str = std::make_unique<wchar_t[]>(40);
-
-	if (!StringFromGUID2(guid, str.get(), 40)) {
-		return {};
-	}
-
-	return str.get();
-}
-
 template <>
 inline std::wstring generate_guid()
 {
 	return guid_to_wstring(generate_guid<GUID>());
 }
 
+template <class T = std::wstring>
+inline T generate_uuid()
+{
+	static_assert("Not implemented");
+}
+
+template <>
 inline std::wstring generate_uuid()
 {
 	return guid_to_uuid_wstring(generate_guid<std::wstring>());
+}
+
+template <>
+inline std::string generate_uuid()
+{
+	return __NAMESPACE__::to_string(generate_uuid());
 }
 
 }  // namespace guid

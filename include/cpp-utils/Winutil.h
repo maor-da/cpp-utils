@@ -5,4 +5,6 @@
 #endif	// !__NAMESPACE__
 
 #include "ImportFunction.h"
+#include "StringFormat.h"
+#include "Token.h"
 #include "guid.h"

@@ -38,6 +38,15 @@ public:
 		*(static_cast<base_t*>(this)) << val;
 	}
 
+	LogStreamStorage(LOG_LEVEL level, std::wstring_view val) : LogStreamStorage(level)
+	{
+		if (m_Level > m_MaxLevel) {
+			return;
+		}
+
+		*(static_cast<base_t*>(this)) << to_utf8(val);
+	}
+
 	~LogStreamStorage()
 	{
 		if (m_Level > m_MaxLevel) {
@@ -57,6 +66,11 @@ public:
 
 		*(static_cast<base_t*>(this)) << val;
 		return *this;
+	}
+
+	LogStreamStorage& operator<<(std::wstring_view val)
+	{
+		return *this << to_utf8(val);
 	}
 
 	LogStreamStorage& operator<<(__flush val)
@@ -93,6 +107,14 @@ private:
 	static LOG_LEVEL m_MaxLevel;
 
 	LoggerImp& m_Log = LoggerImp::instance();
+
+	std::string to_utf8(std::wstring_view ws)
+	{
+#ifdef _WIN32
+		// if windows
+		return winrt::to_string(ws);
+#endif
+	}
 };
 
 class VoidLogStream
@@ -114,18 +136,12 @@ public:
 	requires oss_support_t<LogStreamStorage::base_t, T>
 	LogStreamStorage operator<<(T val)	// factory
 	{
-		// if (LVL > LogStreamStorage::get_level()) {
-		//	return;
-		// }
 		return LogStreamStorage(LVL, val);
 	}
 
 	LogStreamStorage operator<<(std::wstring_view val)
 	{
-		// if (val.empty() || LVL > LogStreamStorage::get_level()) {
-		//	return;
-		// }
-		return *this << to_utf8(val);
+		return LogStreamStorage(LVL, val);
 	}
 
 	void operator()(std::string_view format, ...)
@@ -163,19 +179,10 @@ public:
 			size = std::vswprintf(buf.data(), buf.size(), format.data(), args);
 			// msvc calc the vsnprintf size with null terminator
 			buf = buf.c_str();	// reset the size
-			LogStreamStorage(LVL, std::move(to_utf8(buf)));
+			LogStreamStorage(LVL, buf);
 		}
 		va_end(args);
 
 		// TODO: Create constexpr check for printf specifiers
-	}
-
-private:
-	std::string to_utf8(std::wstring_view ws)
-	{
-#ifdef _WIN32
-		// if windows
-		return winrt::to_string(ws);
-#endif
 	}
 };
