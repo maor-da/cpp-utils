@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 
+#include <cassert>
 #include <mutex>
 
 template <class T>
@@ -13,11 +14,12 @@ public:
 
 	_STATEMACHINE(const uint8_t* TransitionTable, state_t startState)
 		: m_CurrentState(startState),
+		  m_NextState(startState),
 		  m_TransitionTable(TransitionTable){
 
 		  };
 
-	virtual ~_STATEMACHINE() = 0 {}
+	virtual ~_STATEMACHINE() {}
 
 	inline state_t get_state()
 	{
@@ -55,13 +57,16 @@ protected:
 			in_transition	   = true;
 			m_SM.in_transition = true;
 			// printf("start transition\n");
-			m_NextState = newState;
+			m_SM.m_NextState = newState;
 		}
 		~Transition()
 		{
-			if (m_Committed) {
+			if (m_Commited) {
 				// printf("Finish transition\n");
-				m_SM.m_CurrentState = m_NextState;
+				m_SM.m_CurrentState = m_SM.m_NextState;
+			} else {
+				// printf("Revert transition\n");
+				m_SM.m_NextState = m_SM.m_CurrentState;
 			}
 
 			in_transition	   = false;
@@ -70,13 +75,12 @@ protected:
 
 		void commit()
 		{
-			m_Committed = true;
+			m_Commited = true;
 		}
 
 	private:
-		bool m_Committed = false;
+		bool m_Commited = false;
 		_STATEMACHINE& m_SM;
-		state_t m_NextState;
 		thread_local static inline bool in_transition = false;
 		friend _STATEMACHINE;
 	};
@@ -84,6 +88,7 @@ protected:
 private:
 	std::mutex m_Mtx;
 	state_t m_CurrentState;
+	state_t m_NextState;
 	const uint8_t* const m_TransitionTable;
 
 	// instance indicator

@@ -122,5 +122,8 @@
     <ClInclude Include="..\include\cpp-utils\Token.h">
       <Filter>Header Files\windows</Filter>
     </ClInclude>
+    <ClInclude Include="ACL.h">
+      <Filter>Header Files\windows</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

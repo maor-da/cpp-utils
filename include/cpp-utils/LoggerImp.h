@@ -72,7 +72,6 @@ public:
 
 private:
 	LoggerImp();
-	static std::unique_ptr<LoggerImp> m_Instance;
 	__channels m_Channels;
 
 	std::unique_ptr<LogChannel<LOG_CHANNELS::STDOUT>> m_Ch_stdout;

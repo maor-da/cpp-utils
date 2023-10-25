@@ -177,6 +177,7 @@
     <ClInclude Include="..\include\cpp-utils\WindowsDebugLogChannel.h" />
     <ClInclude Include="..\include\cpp-utils\Winutil.h" />
     <ClInclude Include="..\include\cpp-utils\StringFormat.h" />
+    <ClInclude Include="ACL.h" />
     <ClInclude Include="tests.h" />
     <ClInclude Include="..\include\cpp-utils\Token.h" />
   </ItemGroup>

@@ -1,15 +1,9 @@
 #include <cpp-utils/Logger.h>
 
-std::unique_ptr<LoggerImp> LoggerImp::m_Instance = nullptr;
-
-static std::mutex _mtx;	 // limit scope
 LoggerImp& LoggerImp::instance()
 {
-	std::lock_guard<std::mutex> g(_mtx);
-	if (!m_Instance) {
-		m_Instance.reset(new LoggerImp);
-	}
-	return *m_Instance;
+	static LoggerImp instance;
+	return instance;
 }
 
 LoggerImp::LoggerImp() : m_Channels(Logger::Channels{.STDOUT = 1})
