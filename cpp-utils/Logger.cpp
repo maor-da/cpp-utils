@@ -6,7 +6,7 @@ LoggerImp& LoggerImp::instance()
 	return instance;
 }
 
-LoggerImp::LoggerImp() : m_Channels(Logger::Channels{.STDOUT = 1})
+LoggerImp::LoggerImp()
 {
 	set_channel<LOG_CHANNELS::STDOUT>(std::make_unique<LogChannel<LOG_CHANNELS::STDOUT>>());
 	enable_channel<LOG_CHANNELS::STDOUT>();
@@ -19,12 +19,17 @@ inline void LoggerImp::set_channels(__channels cnls)
 
 void LoggerImp::log(LOG_LEVEL level, std::string_view str)
 {
-	auto msg = std::make_shared<std::decay_t<decltype(*m_Ch_stdout)>::container_t>(level, str);
+	auto msg = std::make_shared<std::pair<LOG_LEVEL, std::string>>(level, str);
 	for (uint8_t c = 1; c > 0; c <<= 1) {
 		switch (static_cast<LOG_CHANNELS>(c & m_Channels.all)) {
 			case LOG_CHANNELS::STDOUT:
 				if (m_Ch_stdout) {
 					m_Ch_stdout->push(msg);
+				}
+				break;
+			case LOG_CHANNELS::NO_QUEUE_STDOUT:
+				if (m_Ch_no_queue_stdout) {
+					m_Ch_no_queue_stdout->log(level, str);
 				}
 				break;
 			case LOG_CHANNELS::ETW:

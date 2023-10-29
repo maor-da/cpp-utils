@@ -104,7 +104,7 @@ public:
 
 private:
 	LOG_LEVEL m_Level;
-	static LOG_LEVEL m_MaxLevel;
+	static API LOG_LEVEL m_MaxLevel;
 
 	LoggerImp& m_Log = LoggerImp::instance();
 

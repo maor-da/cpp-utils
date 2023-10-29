@@ -40,6 +40,15 @@
     <Filter Include="Source Files\tests">
       <UniqueIdentifier>{0b805397-c6bc-466a-a7df-0fccd1f86f87}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\windows\internals">
+      <UniqueIdentifier>{39dbcaa8-90e0-45cf-bd80-4cc62c758e36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\windows">
+      <UniqueIdentifier>{a6f9ae44-a1fb-4d0e-aa8c-f10f3aa5d992}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\windows\internals">
+      <UniqueIdentifier>{508c8490-3537-4ec7-a0e7-1635deff8df0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -54,12 +63,6 @@
     <ClCompile Include="..\include\cpp-utils\StateMachine.h">
       <Filter>Header Files\common\logic</Filter>
     </ClCompile>
-    <ClCompile Include="NamedpipeServer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="NamedpipeClient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="test_queue.cpp">
       <Filter>Source Files\tests</Filter>
     </ClCompile>
@@ -72,8 +75,17 @@
     <ClCompile Include="StringFormat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NamedpipeClient.cpp">
+      <Filter>Source Files\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="NamedpipeServer.cpp">
+      <Filter>Source Files\windows</Filter>
+    </ClCompile>
     <ClCompile Include="Token.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="PE.cpp">
+      <Filter>Source Files\windows\internals</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +136,21 @@
     </ClInclude>
     <ClInclude Include="ACL.h">
       <Filter>Header Files\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cpp-utils\internals\Process.h">
+      <Filter>Header Files\windows\internals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cpp-utils\internals\PE.h">
+      <Filter>Header Files\windows\internals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cpp-utils\internals\PEB.h">
+      <Filter>Header Files\windows\internals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cpp-utils\internals\Memory.h">
+      <Filter>Header Files\windows\internals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cpp-utils\internals\System.h">
+      <Filter>Header Files\windows\internals</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

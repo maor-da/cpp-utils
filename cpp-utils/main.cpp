@@ -5,14 +5,31 @@
 
 #include "tests.h"
 
-int main()
+#ifndef _LIB
+
+#include <Windows.h>
+
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 {
-	// test_queue_manager();
-	// test_logger();
-	//test_namedpipe();
-
-	winutil::to_string(L"asfg");
-
-	getchar();
-	return 0;
+	switch (ul_reason_for_call) {
+		case DLL_PROCESS_ATTACH:
+			break;
+		case DLL_THREAD_ATTACH:
+		case DLL_THREAD_DETACH:
+		case DLL_PROCESS_DETACH:
+			break;
+	}
+	return TRUE;
 }
+
+#endif
+
+// int main()
+//{
+//	// test_queue_manager();
+//	test_logger();
+//	// test_namedpipe();
+//
+//	getchar();
+//	return 0;
+// }

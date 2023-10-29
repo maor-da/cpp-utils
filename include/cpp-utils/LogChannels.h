@@ -7,12 +7,30 @@
 
 #include "QueueManager.h"
 
+#if defined(API_EXPORT)
+#define API __declspec(dllexport)
+#else
+#define API __declspec(dllimport)
+#endif
+
+union __channels {
+	struct {
+		uint8_t STDOUT : 1;
+		uint8_t ETW : 1;
+		uint8_t FILE : 1;
+		uint8_t DEBUG : 1;
+		uint8_t NO_QUEUE_STDOUT : 1;
+	};
+	uint8_t all;
+};
+
 enum class LOG_CHANNELS : uint8_t {
-	STDOUT = 0x1 << 0,
-	ETW	   = 0x1 << 1,
-	FILE   = 0x1 << 2,
-	DEBUG  = 0x1 << 3,
-	ALL	   = 0xFF
+	STDOUT			= 0x1 << 0,
+	ETW				= 0x1 << 1,
+	FILE			= 0x1 << 2,
+	DEBUG			= 0x1 << 3,
+	NO_QUEUE_STDOUT = 0x1 << 4,
+	ALL				= 0xFF
 };
 
 enum class LOG_LEVEL : uint8_t {
@@ -24,17 +42,7 @@ enum class LOG_LEVEL : uint8_t {
 	Trace
 };
 
-union __channels {
-	struct {
-		uint8_t STDOUT : 1;
-		uint8_t ETW : 1;
-		uint8_t FILE : 1;
-		uint8_t DEBUG : 1;
-	};
-	uint8_t all;
-};
-
-const char* LevelName(LOG_LEVEL level);
+API const char* LevelName(LOG_LEVEL level);
 
 template <LOG_CHANNELS T>
 class LogChannel
@@ -64,6 +72,18 @@ private:
 		std::cout << LevelName(Obj.first) << " (" << c++ << ") "
 				  << ":: " << Obj.second.c_str() << std::endl;
 		return true;
+	}
+};
+
+template <>
+class LogChannel<LOG_CHANNELS::NO_QUEUE_STDOUT>
+{
+public:
+	void log(LOG_LEVEL level, std::string_view str)
+	{
+		static int c = 0;
+		std::cout << LevelName(level) << " (" << c++ << ") "
+				  << ":: " << str.data() << std::endl;
 	}
 };
 
