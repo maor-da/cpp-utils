@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Windows.h>
+//
 #include <SubAuth.h>
 
 /**
@@ -450,7 +451,10 @@ typedef struct _ACTIVATION_CONTEXT_STACK {
 	ULONG NextCookieSequenceNumber;
 	ULONG StackId;
 } ACTIVATION_CONTEXT_STACK, *PACTIVATION_CONTEXT_STACK;
+
+#ifndef GDI_BATCH_BUFFER_SIZE
 #define GDI_BATCH_BUFFER_SIZE 310
+#endif	// !GDI_BATCH_BUFFER_SIZE
 
 typedef struct _GDI_TEB_BATCH {
 	ULONG Offset;

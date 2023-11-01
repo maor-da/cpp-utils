@@ -7,12 +7,6 @@
 
 #include "QueueManager.h"
 
-#if defined(API_EXPORT)
-#define API __declspec(dllexport)
-#else
-#define API __declspec(dllimport)
-#endif
-
 union __channels {
 	struct {
 		uint8_t STDOUT : 1;
@@ -42,7 +36,7 @@ enum class LOG_LEVEL : uint8_t {
 	Trace
 };
 
-API const char* LevelName(LOG_LEVEL level);
+CPP_UTILS_API const char* LevelName(LOG_LEVEL level);
 
 template <LOG_CHANNELS T>
 class LogChannel

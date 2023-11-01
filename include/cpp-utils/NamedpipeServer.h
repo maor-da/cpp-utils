@@ -5,10 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "Logger.h"
 #include "QueueManager.h"
-
-
 
 class NamedpipeServer : private QueueManager<HANDLE>
 {

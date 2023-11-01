@@ -6,17 +6,11 @@
 
 #include "LogChannels.h"
 
-#if defined(API_EXPORT)
-#define API __declspec(dllexport)
-#else
-#define API __declspec(dllimport)
-#endif
-
 // single instace implementation
 class LoggerImp
 {
 public:
-	static API LoggerImp& instance();
+	static CPP_UTILS_API LoggerImp& instance();
 
 	template <LOG_CHANNELS type>
 	constexpr void set_channel(std::unique_ptr<LogChannel<type>> channel)
@@ -84,7 +78,7 @@ public:
 
 	void set_channels(__channels cnls);
 
-	API void log(LOG_LEVEL level, std::string_view str);
+	CPP_UTILS_API void log(LOG_LEVEL level, std::string_view str);
 
 private:
 	LoggerImp();

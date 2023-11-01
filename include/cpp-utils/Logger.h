@@ -3,12 +3,6 @@
 
 #include "LogStream.h"
 
-#if defined(API_EXPORT)
-#define API __declspec(dllexport)
-#else
-#define API __declspec(dllimport)
-#endif
-
 /**
  * This is a static methods class to instantiate log stream
  * for every log level which use a storage and queue the message to the
@@ -21,17 +15,17 @@ public:
 	using Channels = __channels;
 	static __flush flush;
 
-	static API LogStream<LOG_LEVEL::Fatal> fatal;
-	static API LogStream<LOG_LEVEL::Error> error;
-	static API LogStream<LOG_LEVEL::Warning> warn;
-	static API LogStream<LOG_LEVEL::Info> info;
+	static CPP_UTILS_API LogStream<LOG_LEVEL::Fatal> fatal;
+	static CPP_UTILS_API LogStream<LOG_LEVEL::Error> error;
+	static CPP_UTILS_API LogStream<LOG_LEVEL::Warning> warn;
+	static CPP_UTILS_API LogStream<LOG_LEVEL::Info> info;
 
 #ifdef __NO_TRACE_LOGS__
-	static API VoidLogStream debug;
-	static API VoidLogStream trace;
+	static CPP_UTILS_API VoidLogStream debug;
+	static CPP_UTILS_API VoidLogStream trace;
 #else
-	static API LogStream<LOG_LEVEL::Debug> debug;
-	static API LogStream<LOG_LEVEL::Trace> trace;
+	static CPP_UTILS_API LogStream<LOG_LEVEL::Debug> debug;
+	static CPP_UTILS_API LogStream<LOG_LEVEL::Trace> trace;
 #endif	// __NO_TRACE_LOGS__
 
 	static void set_level(LOG_LEVEL level)

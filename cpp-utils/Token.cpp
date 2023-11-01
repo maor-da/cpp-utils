@@ -1,4 +1,4 @@
-#include <cpp-utils/Winutil.h>
+#include <cpputils.h>
 
 namespace __NAMESPACE__
 {
@@ -10,12 +10,24 @@ Token::Token(ACCESS access)
 
 Token::Token() : Token(ACCESS::all_access) {}
 
-Token::Token(uint32_t pid, ACCESS access)
+Token::~Token()
 {
-	auto hProc = OpenProcess(PROCESS_QUERY_INFORMATION, false, pid);
-	if (hProc) {
-		OpenProcessToken(hProc, static_cast<DWORD>(access), &m_TokenHandle);
+	if (m_TokenHandle) {
+		CloseHandle(m_TokenHandle);
 	}
+}
+
+// Must have PROCESS_QUERY_INFORMATION access
+Token::Token(HANDLE hProcess, ACCESS access)
+{
+	if (hProcess) {
+		OpenProcessToken(hProcess, static_cast<DWORD>(access), &m_TokenHandle);
+	}
+	// throw?
+}
+
+Token::Token(uint32_t pid, ACCESS access) : Token(OpenProcess(PROCESS_QUERY_INFORMATION, false, pid), access)
+{
 }
 
 Token::Token(uint32_t pid) : Token(pid, ACCESS::all_access) {}

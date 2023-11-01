@@ -87,6 +87,18 @@
     <ClCompile Include="PE.cpp">
       <Filter>Source Files\windows\internals</Filter>
     </ClCompile>
+    <ClCompile Include="test_token.cpp">
+      <Filter>Source Files\tests</Filter>
+    </ClCompile>
+    <ClCompile Include="test_process.cpp">
+      <Filter>Source Files\tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Process.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsProcess.cpp">
+      <Filter>Source Files\windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\cpp-utils\guid.h">
@@ -137,20 +149,26 @@
     <ClInclude Include="ACL.h">
       <Filter>Header Files\windows</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\cpp-utils\internals\Process.h">
-      <Filter>Header Files\windows\internals</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\cpp-utils\internals\PE.h">
       <Filter>Header Files\windows\internals</Filter>
     </ClInclude>
     <ClInclude Include="..\include\cpp-utils\internals\PEB.h">
       <Filter>Header Files\windows\internals</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\cpp-utils\internals\Memory.h">
-      <Filter>Header Files\windows\internals</Filter>
+    <ClInclude Include="..\include\cpp-utils\Crypt.h">
+      <Filter>Header Files\common\helpers</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\cpp-utils\internals\System.h">
-      <Filter>Header Files\windows\internals</Filter>
+    <ClInclude Include="..\include\cpputils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cpp-utils\CreateProcess.h">
+      <Filter>Header Files\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cpp-utils\Process.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cpp-utils\WindowsProcess.h">
+      <Filter>Header Files\windows</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 #include <cpp-utils/NamedpipeServer.h>
+#include <cpputils.h>
 
 NamedpipeServer::~NamedpipeServer()
 {

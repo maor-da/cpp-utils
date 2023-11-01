@@ -75,11 +75,7 @@ public:
 
 	LogStreamStorage& operator<<(__flush val)
 	{
-		if (m_Level > m_MaxLevel) {
-			return *this;
-		}
-
-		m_Log.log(m_Level, base_t::str());
+		flush();
 		return *this;
 	}
 
@@ -104,7 +100,7 @@ public:
 
 private:
 	LOG_LEVEL m_Level;
-	static API LOG_LEVEL m_MaxLevel;
+	static CPP_UTILS_API LOG_LEVEL m_MaxLevel;
 
 	LoggerImp& m_Log = LoggerImp::instance();
 

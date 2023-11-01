@@ -1,6 +1,6 @@
 #include <Windows.h>
-#include <cpp-utils/Logger.h>
 #include <cpp-utils/NamedpipeClient.h>
+#include <cpputils.h>
 
 NamedpipeClient::NamedpipeClient(std::wstring_view name, uint8_t nThreads)
 	: base_t(nThreads), m_PipeName(name)

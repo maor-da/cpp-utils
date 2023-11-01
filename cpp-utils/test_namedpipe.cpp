@@ -1,6 +1,6 @@
 #include <cpp-utils/NamedpipeClient.h>
 #include <cpp-utils/NamedpipeServer.h>
-#include <cpp-utils/Winutil.h>
+#include <cpputils.h>
 
 #include "tests.h"
 

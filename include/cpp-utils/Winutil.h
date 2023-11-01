@@ -7,4 +7,6 @@
 #include "ImportFunction.h"
 #include "StringFormat.h"
 #include "Token.h"
+#include "WindowsProcess.h"
 #include "guid.h"
+#include "internals/PE.h"

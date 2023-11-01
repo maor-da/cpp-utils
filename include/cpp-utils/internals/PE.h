@@ -4,11 +4,14 @@
 
 #include "PEB.h"
 
-enum class SYSTEM_TYPE {
-	x64,
-	x86
+enum class SYSTEM_TYPE : uint8_t {
+	Win_x64,
+	Win_x86,
+	Unix_x64,
+	Unix_x86
 };
-enum class PROCESS_TYPE : int {
+
+enum class PROCESS_TYPE : uint8_t {
 	Native,
 	WOW
 };
@@ -74,7 +77,7 @@ private:
 	PIMAGE_SECTION_HEADER m_Sections																= nullptr;
 	enable_if_else_t<T == PROCESS_TYPE::Native, PIMAGE_NT_HEADERS, PIMAGE_NT_HEADERS32> m_NtHeaders = nullptr;
 
-	bool parse();
+	CPP_UTILS_API bool parse();
 };
 
 template <PROCESS_TYPE T>

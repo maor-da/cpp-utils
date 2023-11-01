@@ -1,4 +1,4 @@
-#include <cpp-utils/Logger.h>
+#include <cpputils.h>
 
 LoggerImp& LoggerImp::instance()
 {
@@ -8,8 +8,8 @@ LoggerImp& LoggerImp::instance()
 
 LoggerImp::LoggerImp()
 {
-	set_channel<LOG_CHANNELS::STDOUT>(std::make_unique<LogChannel<LOG_CHANNELS::STDOUT>>());
-	enable_channel<LOG_CHANNELS::STDOUT>();
+	//set_channel<LOG_CHANNELS::STDOUT>(std::make_unique<LogChannel<LOG_CHANNELS::STDOUT>>());
+	//enable_channel<LOG_CHANNELS::STDOUT>();
 }
 
 inline void LoggerImp::set_channels(__channels cnls)

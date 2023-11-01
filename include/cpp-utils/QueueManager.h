@@ -157,7 +157,6 @@ private:
 
 			m_Shutdown		= false;
 			m_ShutdownByTID = std::thread::id();
-
 			delete T;
 		}
 	};
@@ -193,11 +192,11 @@ private:
 		while (true) {
 			try {
 				std::unique_lock<std::mutex> syncLock(m_WorkerMutex, std::defer_lock);
+
+				elem_t&& obj = get_task();
 				if (SYNC) {	 // synchronize between workers
 					syncLock.lock();
 				}
-
-				elem_t&& obj = get_task();
 
 				if (!obj) {
 					continue;

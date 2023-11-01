@@ -1,4 +1,4 @@
-#include <cpp-utils/Logger.h>
+#include <cpputils.h>
 #include <cpp-utils/WindowsDebugLogChannel.h>
 
 #include "tests.h"

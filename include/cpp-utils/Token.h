@@ -1,5 +1,6 @@
 #pragma once
 #include <Windows.h>
+#include <cpputils.h>
 #include <stdint.h>
 
 #include <string_view>
@@ -9,23 +10,20 @@ namespace __NAMESPACE__
 {
 
 template <class T, class... Ts>
-concept all_convertable = sizeof
-...(Ts) < 2 || (sizeof...(Ts) > 1 && std::conjunction_v<std::is_convertible<Ts, T>...>);
+concept all_convertable =
+	sizeof...(Ts) < 2 || (sizeof...(Ts) > 1 && std::conjunction_v<std::is_convertible<Ts, T>...>);
 
 template <class T, class... Ts>
-concept all_same = sizeof
-...(Ts) < 2 || (sizeof...(Ts) > 1 && std::conjunction_v<std::is_same<Ts, T>...>);
+concept all_same = sizeof...(Ts) < 2 || (sizeof...(Ts) > 1 && std::conjunction_v<std::is_same<Ts, T>...>);
 
-class Token;
-
-class Privilege
+class CPP_UTILS_API Privilege
 {
 public:
 	Privilege(HANDLE token);
 
 	template <class... Args>
-	requires all_convertable<std::wstring_view, Args...> bool
-	add(Args... privilege)
+		requires all_convertable<std::wstring_view, Args...>
+	bool add(Args... privilege)
 	{
 		if (!m_Token) {
 			return false;
@@ -34,8 +32,8 @@ public:
 	}
 
 	template <class... Args>
-	requires all_convertable<std::wstring_view, Args...> bool
-	remove(Args... privilege)
+		requires all_convertable<std::wstring_view, Args...>
+	bool remove(Args... privilege)
 	{
 		if (!m_Token) {
 			return false;
@@ -49,7 +47,7 @@ private:
 	bool set_privilege(std::wstring_view privilege, bool enable);
 };
 
-class Token
+class CPP_UTILS_API Token
 {
 public:
 	enum class ACCESS : uint32_t {
@@ -70,10 +68,15 @@ public:
 	Token(ACCESS access);
 
 	Token();
+	~Token();
+
+	Token(HANDLE hProcess, ACCESS access);
 
 	Token(uint32_t pid, ACCESS access);
 
 	Token(uint32_t pid);
+
+	Token(const Token&) = default;
 
 	inline constexpr bool is_valid();
 

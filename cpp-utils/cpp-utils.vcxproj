@@ -160,7 +160,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>API_EXPORT;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CPP_UTILS_API_EXPORT;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>../include/</AdditionalIncludeDirectories>
@@ -190,7 +190,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>API_EXPORT;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CPP_UTILS_API_EXPORT;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>../include/</AdditionalIncludeDirectories>
@@ -224,7 +224,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>API_EXPORT;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CPP_UTILS_API_EXPORT;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>../include/</AdditionalIncludeDirectories>
@@ -254,7 +254,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>API_EXPORT;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CPP_UTILS_API_EXPORT;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>../include/</AdditionalIncludeDirectories>
@@ -292,19 +292,23 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="..\include\cpp-utils\WinRAII.h" />
     <ClCompile Include="..\include\cpp-utils\StateMachine.h" />
+    <ClCompile Include="Process.cpp" />
     <ClCompile Include="StringFormat.cpp" />
     <ClCompile Include="test_logger.cpp" />
     <ClCompile Include="test_namedpipe.cpp" />
+    <ClCompile Include="test_process.cpp" />
     <ClCompile Include="test_queue.cpp" />
+    <ClCompile Include="test_token.cpp" />
     <ClCompile Include="Token.cpp" />
+    <ClCompile Include="WindowsProcess.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\cpp-utils\CreateProcess.h" />
     <ClInclude Include="..\include\cpp-utils\guid.h" />
-    <ClInclude Include="..\include\cpp-utils\internals\Memory.h" />
+    <ClInclude Include="..\include\cpp-utils\Crypt.h" />
     <ClInclude Include="..\include\cpp-utils\internals\PE.h" />
     <ClInclude Include="..\include\cpp-utils\internals\PEB.h" />
-    <ClInclude Include="..\include\cpp-utils\internals\Process.h" />
-    <ClInclude Include="..\include\cpp-utils\internals\System.h" />
+    <ClInclude Include="..\include\cpp-utils\Process.h" />
     <ClInclude Include="..\include\cpp-utils\TypeHelpers.h" />
     <ClInclude Include="..\include\cpp-utils\ImportFunction.h" />
     <ClInclude Include="..\include\cpp-utils\LogChannels.h" />
@@ -315,8 +319,10 @@
     <ClInclude Include="..\include\cpp-utils\NamedpipeServer.h" />
     <ClInclude Include="..\include\cpp-utils\QueueManager.h" />
     <ClInclude Include="..\include\cpp-utils\WindowsDebugLogChannel.h" />
+    <ClInclude Include="..\include\cpp-utils\WindowsProcess.h" />
     <ClInclude Include="..\include\cpp-utils\Winutil.h" />
     <ClInclude Include="..\include\cpp-utils\StringFormat.h" />
+    <ClInclude Include="..\include\cpputils.h" />
     <ClInclude Include="ACL.h" />
     <ClInclude Include="tests.h" />
     <ClInclude Include="..\include\cpp-utils\Token.h" />
