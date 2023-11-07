@@ -27,31 +27,30 @@ __NAMESPACE__::WindowsProcess::~WindowsProcess()
 	}
 }
 
+std::shared_ptr<__NAMESPACE__::WindowsProcess> __NAMESPACE__::WindowsProcess::cast(std::shared_ptr<Process> p)
+{
+	return std::dynamic_pointer_cast<winutil::WindowsProcess>(p);
+}
+
 inline std::shared_ptr<winutil::Token> __NAMESPACE__::WindowsProcess::get_token()
 {
 	return m_Token;
 }
 
-// create process
-
-__NAMESPACE__::WindowsNativeProcess::WindowsNativeProcess(uint32_t pid, uint32_t access) : base_t(pid, access)
-{
-}
-
-__NAMESPACE__::WindowsNativeProcess::WindowsNativeProcess(uint32_t pid) : base_t(pid) {}
-
-__NAMESPACE__::WindowsNativeProcess::WindowsNativeProcess(std::filesystem::path path) : base_t(path) {}
+// template <class... Args>
+//__NAMESPACE__::WindowsNativeProcess::WindowsNativeProcess(Args... args) : base_t(args...)
+//{
+// }
 
 bool __NAMESPACE__::WindowsNativeProcess::is_wow64()
 {
 	return false;
 }
 
-__NAMESPACE__::WindowsWoWProcess::WindowsWoWProcess(uint32_t pid, uint32_t access) : base_t(pid, access) {}
-
-__NAMESPACE__::WindowsWoWProcess::WindowsWoWProcess(uint32_t pid) : base_t(pid) {}
-
-__NAMESPACE__::WindowsWoWProcess::WindowsWoWProcess(std::filesystem::path path) : base_t(path) {}
+// template <class... Args>
+//__NAMESPACE__::WindowsWoWProcess::WindowsWoWProcess(Args... args) : base_t(args...)
+//{
+// }
 
 bool __NAMESPACE__::WindowsWoWProcess::is_wow64()
 {

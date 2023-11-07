@@ -39,6 +39,8 @@ public:
 
 	~WindowsProcess();
 
+	static std::shared_ptr<WindowsProcess> cast(std::shared_ptr<Process> p);
+
 	std::shared_ptr<winutil::Token> get_token();
 
 	virtual bool is_wow64() = 0;
@@ -53,16 +55,7 @@ class WindowsNativeProcess : public WindowsProcess
 {
 public:
 	using base_t = WindowsProcess;
-
-	// open process
-	WindowsNativeProcess(uint32_t pid, uint32_t access);
-
-	WindowsNativeProcess(uint32_t pid);
-
-	// create process
-	WindowsNativeProcess(std::filesystem::path path);
-
-	WindowsNativeProcess(WindowsNativeProcess&&) = default;
+	using base_t::base_t;
 
 	bool is_wow64() override;
 };
@@ -71,16 +64,7 @@ class WindowsWoWProcess : public WindowsProcess
 {
 public:
 	using base_t = WindowsProcess;
-
-	// open process
-	WindowsWoWProcess(uint32_t pid, uint32_t access);
-
-	WindowsWoWProcess(uint32_t pid);
-
-	// create process
-	WindowsWoWProcess(std::filesystem::path path);
-
-	WindowsWoWProcess(WindowsWoWProcess&&) = default;
+	using base_t::base_t;
 
 	bool is_wow64() override;
 };

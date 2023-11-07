@@ -1,22 +1,29 @@
 #pragma once
 #include <stdint.h>
 
+#include <memory>
+
 template <size_t N>
 struct ENCRYPTED_DATA {
-	constexpr ENCRYPTED_DATA(uint64_t salt, char const (&plaintext)[N])
-		: key(salt ^ 0xcbf29ce484222325), data()
+	using type = ENCRYPTED_DATA<N>;
+
+	constexpr ENCRYPTED_DATA(uint64_t salt, char const (&plaintext)[N]) : data()
 	{
-		crypt(plaintext);
+		crypt(plaintext, salt ^ 0xcbf29ce484222325);
 	}
 
-	constexpr ENCRYPTED_DATA(uint64_t salt, uint8_t const (&ciphertext)[N])
-		: key(salt ^ 0xcbf29ce484222325), data()
+	constexpr ENCRYPTED_DATA(uint64_t salt, uint8_t const (&ciphertext)[N]) : data()
 	{
-		crypt(ciphertext);
+		crypt(ciphertext, salt ^ 0xcbf29ce484222325);
+	}
+
+	uint8_t const (&get() const)[N]
+	{
+		return data;
 	}
 
 	template <typename T>
-	constexpr void crypt(T const (&text)[N])
+	constexpr void crypt(T const (&text)[N], const uint64_t key)
 	{
 #pragma warning(disable : 4244)
 		for (size_t i = 0; i < N; i++) {
@@ -26,6 +33,14 @@ struct ENCRYPTED_DATA {
 #pragma warning(default : 4244)
 	}
 
-	uint64_t key;
+	// const uint64_t key;
 	uint8_t data[N];
+	const size_t size = N;
 };
+
+#pragma optimize("", off)
+auto decrypt(auto& ct, uint64_t salt)
+{
+	auto pt = std::make_unique<decltype(ct)>(salt, ct.data);
+	return std::move(pt);
+}

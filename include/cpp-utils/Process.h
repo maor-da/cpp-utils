@@ -12,7 +12,6 @@
 struct ATTACH_PROCESS_FILTER {
 	std::string name;
 	// TODO: add capabilities filter
-	// TODO: add capabilities filter
 };
 
 class CPP_UTILS_API Process

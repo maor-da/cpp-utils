@@ -26,7 +26,8 @@ Token::Token(HANDLE hProcess, ACCESS access)
 	// throw?
 }
 
-Token::Token(uint32_t pid, ACCESS access) : Token(OpenProcess(PROCESS_QUERY_INFORMATION, false, pid), access)
+Token::Token(uint32_t pid, ACCESS access)
+	: Token(OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, pid), access)
 {
 }
 
@@ -55,8 +56,10 @@ Privilege::Privilege(HANDLE token) : m_Token(token) {}
 
 bool Privilege::set_privilege(std::wstring_view privilege, bool enable)
 {
-	TOKEN_PRIVILEGES tp;
-	LUID luid;
+	TOKEN_PRIVILEGES tp{};
+	TOKEN_PRIVILEGES prevTp{};
+	DWORD prevSize = 0;
+	LUID luid{};
 
 	if (!LookupPrivilegeValue(nullptr, privilege.data(), &luid)) {
 		return false;
@@ -66,7 +69,7 @@ bool Privilege::set_privilege(std::wstring_view privilege, bool enable)
 	tp.Privileges[0].Luid		= luid;
 	tp.Privileges[0].Attributes = enable ? SE_PRIVILEGE_ENABLED : NULL;
 
-	if (!AdjustTokenPrivileges(m_Token, false, &tp, sizeof(tp), nullptr, NULL)) {
+	if (!AdjustTokenPrivileges(m_Token, false, &tp, sizeof(tp), &prevTp, &prevSize)) {
 		return false;
 	}
 
